@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="./style.css" rel="stylesheet"/>
+    <title>Document</title>
+</head>
+<header>
+    <h1>Calculadora de Imposto de Renda</h1>
+</header>
+<body>
+    <div id="form">
+        <form>
+            <div>
+                <label>Nome:</label>
+            <div>
+                <input type="text" name="nome" id="nome"/>
+            </div>
+            </div>
+            <div>
+                <label>Número de dependentes:</label>
+            <div>
+                <input type="number" name="dependentes" id="dependentes"/>
+            </div>
+            </div>
+            <div>
+                <label>Valor do salário bruto:</label>
+            <div>
+                <input type="number" name="sb" id="sb"/>
+            </div>
+            </div>
+            <div>
+                <input style="margin-top: 1vh" type="submit" name="calcular" value="Calcular"/>
+            
+                <input type="reset" value="Limpar">
+            </div>
+            
+        </form>
+    </div>
+    
+
+    <table>
+        <thead>
+            <tr>
+                <th >
+                    NOME
+                </th>
+                <th class="titulos">
+                    SALÁRIO BRUTO
+                </th>
+                <th class="titulos">
+                    % DESCONTO INSS
+                </th>
+                <th class="titulos">
+                    DESCONTO INSS
+                </th>
+                <th class="titulos">
+                    % DESCONTO IRPF
+                </th>
+                <th class="titulos">
+                    DESCONTO IRPF
+                </th>
+                <th class="titulos">
+                    SALÁRIO LÍQUIDO
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+
+    <script>
+        let form=document.querySelector("form")
+        let tbody=document.querySelector("tbody")
+        form.onsubmit=function(){
+            let nome=document.querySelector("#nome").value
+            let salárioBruto=document.querySelector("#sb").value
+            let númeroDependentes=document.querySelector("#dependentes").value
+            
+            let valorDependentes=númeroDependentes*189.59
+            let INSSdesconto=0
+            let inss=0
+            let INSSprct=0
+            salárioBruto=parseFloat(salárioBruto)
+            
+            if(salárioBruto<=1100){
+                INSSdesconto=salárioBruto*0.075
+                inss=INSSdesconto
+                INSSprct="7,5%"
+            }
+            if(salárioBruto>1100 && salárioBruto<=2203.48){
+                INSSdesconto=salárioBruto*0.09
+                inss=INSSdesconto-16.50
+                INSSprct="9%"
+            }
+            if(salárioBruto>2203.48 && salárioBruto<=3305.22){
+                INSSdesconto=salárioBruto*0.012
+                inss=INSSdesconto-82.60
+                INSSprct="12%"
+            }
+            if(salárioBruto>3305.22 && salárioBruto<=6433.57){
+                INSSdesconto=salárioBruto*0.14
+                inss=INSSdesconto-148.71
+                INSSprct="14%"
+            }
+            
+            salárioBruto=salárioBruto-inss
+            let IRPFdesconto=""
+            let irpf=0
+            let IRPFprcnt=""
+
+            if(salárioBruto<=1903.98){
+                irpf=0
+                IRPFprcnt="Isento"
+            }
+            if(salárioBruto>1903.98 && salárioBruto<=2826.65){
+                IRPFdesconto=salárioBruto*0.075
+                IRPFprcnt="7,5%"
+                irpf=IRPFdesconto-142.8
+            }
+            if(salárioBruto>2826.65 && salárioBruto<=3751.05){
+                IRPFdesconto=salárioBruto*0.15
+                IRPFprcnt="15%"
+                irpf=IRPFdesconto-354.8
+            }
+            if(salárioBruto>3751.05 && salárioBruto<=4664.68){
+                IRPFdesconto=salárioBruto*0.225
+                IRPFprcnt="22,5%"
+                irpf=IRPFdesconto-636.13
+            }
+            if(salárioBruto>4664.68){
+                IRPFdesconto=salárioBruto*0.275
+                IRPFprcnt="27,5%"
+                irpf=IRPFdesconto-869.38
+            }
+
+            irpf=irpf-valorDependentes
+            let salárioLiquido=salárioBruto-irpf
+
+            inss=inss.toFixed(2)
+            irpf=irpf.toFixed(2)
+            salárioLiquido.toFixed(2)
+            salárioBruto=document.querySelector("#sb").value
+
+            let tr=document.createElement("tr")
+            let tdNome=document.createElement("td")
+            let txNome=document.createTextNode(nome)
+            tdNome.append(txNome)
+            tr.append(tdNome)
+
+            let tdSB=document.createElement("td")
+            let txSB=document.createTextNode(salárioBruto)
+            tdSB.append(txSB)
+            tr.append(tdSB)
+
+            let tdPrcntINSS=document.createElement("td")
+            let txPrcntINSS=document.createTextNode(INSSprct)
+            tdPrcntINSS.append(txPrcntINSS)
+            tr.append(tdPrcntINSS)
+
+            let tdINSSdesc=document.createElement("td")
+            let txINSSdesc=document.createTextNode(inss)
+            tdINSSdesc.append(txINSSdesc)
+            tr.append(tdINSSdesc)
+
+            let tdIRPFprct=document.createElement("td")
+            let txIRPFprct=document.createTextNode(IRPFprcnt)
+            tdIRPFprct.append(txIRPFprct)
+            tr.append(tdIRPFprct)
+
+            let tdIRPFdesc=document.createElement("td")
+            let txIRPFdesc=document.createTextNode(irpf)
+            tdIRPFdesc.append(txIRPFdesc)
+            tr.append(tdIRPFdesc)
+
+            let tdSL=document.createElement("td")
+            let txSL=document.createTextNode(salárioLiquido)
+            tdSL.append(txSL)
+            tr.append(tdSL)
+
+            tbody.append(tr)
+
+            return false
+        }
+    </script>
+</body>
+</html>
